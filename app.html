@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>HRMNY · App Demo</title>
+<meta name="description" content="A clickable prototype of the HRMNY app — discover verified-human tracks, license with live value pricing, upload &amp; verify as an artist, and get paid." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+<link rel="stylesheet" href="assets/app-proto.css" />
+</head>
+<body>
+
+<div class="stage">
+  <!-- caption above the device (hidden on small screens) -->
+  <div class="stage-head">
+    <a class="brand" href="index.html" style="text-decoration:none">
+      <svg class="logo-mark" viewBox="0 0 132 72" aria-hidden="true">
+        <circle class="ring" cx="34" cy="36" r="27"/><circle class="ring" cx="66" cy="36" r="27"/><circle class="ring" cx="98" cy="36" r="27"/>
+        <line x1="40" y1="36" x2="92" y2="36" stroke="currentColor" stroke-width="5"/>
+        <circle class="node-l" cx="40" cy="36" r="9"/><circle class="node-c" cx="66" cy="36" r="10"/><circle class="node-r" cx="92" cy="36" r="9"/>
+      </svg>
+      <b>HRMNY</b>
+    </a>
+    <h1>The app, clickable</h1>
+    <p>The three pillars as a working product — discover &amp; license verified-human music with live value pricing, upload &amp; prove a track as an artist, and watch the payout land. Tap anything.</p>
+  </div>
+
+  <!-- ============ THE PHONE ============ -->
+  <div class="phone" id="phone">
+    <div class="notch"></div>
+    <div class="statusbar">
+      <span>9:41</span>
+      <span class="sb-icons">
+        <svg viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="5" y="4" width="3" height="8" rx="1" fill="currentColor"/><rect x="10" y="2" width="3" height="10" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor" opacity=".4"/></svg>
+        <svg viewBox="0 0 18 12" aria-hidden="true"><path d="M9 2.5C5.5 2.5 2.7 4 1 5.6l8 6.4 8-6.4C15.3 4 12.5 2.5 9 2.5Z" fill="currentColor"/></svg>
+        <svg viewBox="0 0 18 12" aria-hidden="true"><rect x="0.5" y="1" width="14" height="10" rx="2.5" fill="none" stroke="currentColor"/><rect x="2" y="2.5" width="10" height="7" rx="1" fill="currentColor"/><rect x="15.5" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg>
+      </span>
+    </div>
+
+    <!-- contextual app bar -->
+    <div class="appbar">
+      <button class="ab-back" id="abBack" hidden aria-label="Back">‹</button>
+      <svg class="logo-mark ab-mark" id="abMark" viewBox="0 0 132 72" aria-hidden="true">
+        <circle class="ring" cx="34" cy="36" r="27"/><circle class="ring" cx="66" cy="36" r="27"/><circle class="ring" cx="98" cy="36" r="27"/>
+        <line x1="40" y1="36" x2="92" y2="36" stroke="currentColor" stroke-width="5"/>
+        <circle class="node-l" cx="40" cy="36" r="9"/><circle class="node-c" cx="66" cy="36" r="10"/><circle class="node-r" cx="92" cy="36" r="9"/>
+      </svg>
+      <span class="ab-title" id="abTitle">HRMNY</span>
+      <span class="ab-spacer"></span>
+      <button class="ab-action" id="abAction" hidden></button>
+    </div>
+
+    <!-- screens -->
+    <div class="screens" id="screens">
+
+      <!-- LAUNCH / ROLE -->
+      <section class="screen active" data-screen="launch">
+        <div style="text-align:center;padding:18px 4px 6px">
+          <svg class="logo-mark" viewBox="0 0 132 72" style="width:96px;height:62px;color:var(--ink);margin:0 auto 10px;display:block" aria-hidden="true">
+            <circle class="ring" cx="34" cy="36" r="27"/><circle class="ring" cx="66" cy="36" r="27"/><circle class="ring" cx="98" cy="36" r="27"/>
+            <line x1="40" y1="36" x2="92" y2="36" stroke="currentColor" stroke-width="5"/>
+            <circle class="node-l" cx="40" cy="36" r="9"/><circle class="node-c" cx="66" cy="36" r="10"/><circle class="node-r" cx="92" cy="36" r="9"/>
+          </svg>
+          <div class="s-title" style="font-size:30px">HRMNY</div>
+          <p class="s-sub" style="max-width:30ch;margin:8px auto 0">Verified human music, licensed fairly. Pick a side to explore — you can switch tabs anytime.</p>
+        </div>
+
+        <div style="margin-top:22px">
+          <button class="acard" id="roleBrand" style="width:100%;text-align:left;cursor:pointer;display:flex;gap:14px;align-items:center">
+            <div class="tart" style="width:48px;height:48px;background:linear-gradient(135deg,#7c3aed,#c77dff)"></div>
+            <div style="flex:1">
+              <div style="font-family:var(--display);font-weight:700;font-size:17px">I'm a brand / creator</div>
+              <div class="s-sub" style="margin-top:3px">Discover &amp; license tracks</div>
+            </div>
+            <span style="color:var(--ink-faint);font-size:20px">›</span>
+          </button>
+          <button class="acard" id="roleArtist" style="width:100%;text-align:left;cursor:pointer;display:flex;gap:14px;align-items:center;margin-top:12px">
+            <div class="tart" style="width:48px;height:48px;background:linear-gradient(135deg,#5fd39a,#7c3aed)"></div>
+            <div style="flex:1">
+              <div style="font-family:var(--display);font-weight:700;font-size:17px">I'm an artist</div>
+              <div class="s-sub" style="margin-top:3px">Upload, prove &amp; get paid</div>
+            </div>
+            <span style="color:var(--ink-faint);font-size:20px">›</span>
+          </button>
+        </div>
+        <p class="note-line" style="text-align:center;margin-top:24px">Prototype · sample data · no real payments</p>
+      </section>
+
+      <!-- DISCOVER (buyer feed) -->
+      <section class="screen" data-screen="discover">
+        <div class="eyebrow">For brands &amp; creators</div>
+        <div class="s-title">Discover</div>
+        <p class="s-sub">Every track here is humans-only and provably so. License before it heats up.</p>
+        <div class="chips" id="discoverChips">
+          <button class="fchip active" data-scopefilter="all">All</button>
+          <button class="fchip" data-scopefilter="fire">🔥 Heating up</button>
+          <button class="fchip" data-scopefilter="cold">New &amp; cold</button>
+          <button class="fchip" data-scopefilter="value">Best value</button>
+        </div>
+        <div class="feed" id="feed"></div>
+      </section>
+
+      <!-- TRACK DETAIL + LICENSE BUILDER -->
+      <section class="screen" data-screen="track">
+        <div id="trackBody"></div>
+      </section>
+
+      <!-- CHECKOUT -->
+      <section class="screen" data-screen="checkout">
+        <div id="checkoutBody"></div>
+      </section>
+
+      <!-- RECEIPT -->
+      <section class="screen" data-screen="receipt">
+        <div id="receiptBody"></div>
+      </section>
+
+      <!-- STUDIO (artist) -->
+      <section class="screen" data-screen="studio">
+        <div class="eyebrow">Artist studio</div>
+        <div class="s-title">Hey, Mara</div>
+        <div class="earn" style="margin-top:14px">
+          <div class="e-lab">Lifetime earnings · you keep 100%</div>
+          <div class="e-amt">$<span id="earnAmt">4,820</span></div>
+          <div class="e-sub">↑ $612 in the last 30 days</div>
+          <div class="minigrid">
+            <div class="mstat"><div class="mn" id="statTracks">3</div><div class="ml">tracks live</div></div>
+            <div class="mstat"><div class="mn" id="statLicenses">17</div><div class="ml">licenses sold</div></div>
+          </div>
+        </div>
+        <button class="pbtn" id="goUpload" style="margin-top:14px">＋ Upload a track</button>
+        <div class="eyebrow" style="margin-top:22px">Your catalog</div>
+        <div class="feed" id="studioFeed" style="margin-top:10px"></div>
+      </section>
+
+      <!-- UPLOAD (multi-step) -->
+      <section class="screen" data-screen="upload">
+        <div class="steps" id="upSteps">
+          <div class="stp cur"></div><div class="stp"></div><div class="stp"></div><div class="stp"></div>
+        </div>
+        <div id="uploadBody"></div>
+      </section>
+
+      <!-- MANAGE TRACK (artist) -->
+      <section class="screen" data-screen="manage">
+        <div id="manageBody"></div>
+      </section>
+
+      <!-- VERIFY -->
+      <section class="screen" data-screen="verify">
+        <div class="eyebrow">Provenance</div>
+        <div class="s-title">Verify a track</div>
+        <p class="s-sub">Anyone can print “human-made.” HRMNY proves it — fingerprint, content credentials, a signed attestation, and a tamper-proof anchor. Run a check.</p>
+        <div class="scanbox" style="margin-top:18px">
+          <div class="scan-target" id="scanArt" style="background:linear-gradient(135deg,#7c3aed,#c77dff)">
+            <div class="beam" id="scanBeam" style="display:none"></div>
+          </div>
+          <div style="font-family:var(--display);font-weight:700;font-size:17px" id="scanTitle">“Midnight Drive”</div>
+          <div class="s-sub" style="margin-top:2px" id="scanArtist">Mara Vance</div>
+          <button class="pbtn" id="runScan" style="margin-top:16px">Run verification</button>
+        </div>
+        <p class="note-line" style="text-align:center;margin-top:14px">Try it from any track’s “Verify” button too.</p>
+      </section>
+
+      <!-- VERIFY REPORT -->
+      <section class="screen" data-screen="report">
+        <div id="reportBody"></div>
+      </section>
+
+      <!-- WALLET -->
+      <section class="screen" data-screen="wallet">
+        <div class="eyebrow">Payouts</div>
+        <div class="s-title">Wallet</div>
+        <div class="earn" style="margin-top:14px">
+          <div class="e-lab">Available to pay out</div>
+          <div class="e-amt">$<span>612</span><small>.00</small></div>
+          <button class="pbtn sm" id="payoutBtn" style="margin-top:10px;width:auto;display:inline-flex;padding:10px 20px">Pay out to bank →</button>
+        </div>
+        <div class="connect" style="margin-top:14px">
+          <span class="cn-dot"></span>
+          <div class="cn-t">Stripe Connect · active<small>Verified · payouts land in ~2 business days</small></div>
+        </div>
+        <div class="eyebrow" style="margin-top:22px">Recent activity</div>
+        <div class="acard" style="margin-top:10px;padding:6px 16px">
+          <div class="txn"><span class="tx-ic">↓</span><div class="tx-t">“Midnight Drive” · Paid Social<small>Licensed by Lumen Studios</small></div><span class="tx-v in">+$343</span></div>
+          <div class="txn"><span class="tx-ic">↓</span><div class="tx-t">“Paper Cranes” · Organic<small>Licensed by @veracreates</small></div><span class="tx-v in">+$120</span></div>
+          <div class="txn"><span class="tx-ic">↑</span><div class="tx-t">Payout to •••• 4471<small>May 30</small></div><span class="tx-v out">−$1,540</span></div>
+          <div class="txn"><span class="tx-ic">↓</span><div class="tx-t">“Midnight Drive” · Broad + Exclusive<small>Licensed by Atlas Athletic</small></div><span class="tx-v in">+$2,592</span></div>
+        </div>
+        <p class="note-line" style="margin-top:16px">The gate, working: liquidity first. Payout rails are the precondition — every other pillar sits on top of this transaction clearing.</p>
+      </section>
+
+    </div>
+
+    <!-- bottom tabs -->
+    <nav class="tabbar" id="tabbar">
+      <button class="tab" data-tab="discover">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span class="tlab">Discover</span>
+      </button>
+      <button class="tab" data-tab="studio">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>
+        <span class="tlab">Studio</span>
+      </button>
+      <button class="tab" data-tab="verify">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span class="tlab">Verify</span>
+      </button>
+      <button class="tab" data-tab="wallet">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/><circle cx="16.5" cy="14.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+        <span class="tlab">Wallet</span>
+      </button>
+    </nav>
+
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <div class="stage-foot">
+    <div class="hint" style="margin-bottom:10px">Live prototype — every control responds</div>
+    <a href="index.html">‹ Back to the Through-Line</a>
+  </div>
+</div>
+
+<script src="assets/app-proto.js"></script>
+</body>
+</html>
