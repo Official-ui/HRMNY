@@ -10,6 +10,10 @@
   --r-card: 12px;
   --r-ctl: 9px;
   --r-tile: 8px;
+  /* brand discipline: no green/teal. "verified / good" reads in brand indigo,
+     momentum heat in magenta. Black + white + the two brand accents only. */
+  --good: var(--human);
+  --bad: var(--chain);
 }
 
 /* ——— Stage ——— */
@@ -80,12 +84,13 @@
 .vbadge { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-dim); }
 .vbadge .vdot { width: 6px; height: 6px; border-radius: 50%; background: var(--good); }
 .mom-chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-dim); }
+/* momentum encoded in the brand duo only: dim → indigo → magenta */
 .mom-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ink-faint); }
-.mom-chip[data-m="cold"]::before { background: #6f86a8; }
-.mom-chip[data-m="cool"]::before { background: #7e7bd0; }
+.mom-chip[data-m="cold"]::before { background: var(--ink-faint); }
+.mom-chip[data-m="cool"]::before { background: var(--human); }
 .mom-chip[data-m="warm"]::before { background: var(--human-2); }
 .mom-chip[data-m="hot"]::before  { background: var(--chain); }
-.mom-chip[data-m="fire"]::before { background: #ff8ab0; }
+.mom-chip[data-m="fire"]::before { background: var(--chain); box-shadow: 0 0 0 2px rgba(199,125,255,.22); }
 
 /* buttons — one accent primary, hairline ghost */
 .pbtn { display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%; font-family: var(--mono); font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase; color: #fff; background: var(--human); border: 1px solid var(--human); border-radius: var(--r-ctl); padding: 15px; font-weight: 500; transition: filter .2s, border-color .2s, color .2s; }
@@ -114,8 +119,8 @@
 .tcard { display: grid; grid-template-columns: 50px 1fr auto; gap: 13px; align-items: center; background: transparent; border: 1px solid var(--line); border-radius: var(--r-card); padding: 11px; text-align: left; width: 100%; transition: border-color .2s, background .2s; }
 .tcard:hover { border-color: var(--line-2); background: var(--panel); }
 .tcard.search-hide { display: none !important; }
-.tart { width: 50px; height: 50px; border-radius: var(--r-tile); flex: none; position: relative; overflow: hidden; border: 1px solid var(--line); }
-.tart::after { content: "\266A"; position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-faint); font-size: 18px; }
+.tart { width: 50px; height: 50px; border-radius: var(--r-tile); flex: none; position: relative; overflow: hidden; background: #0c0a12; }
+.cover { display: block; width: 100%; height: 100%; }
 .tmeta { min-width: 0; }
 .tmeta .tt { display: block; font-family: var(--display); font-weight: 700; font-size: 15.5px; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tmeta .ta { display: block; color: var(--ink-dim); font-size: 12.5px; margin: 1px 0 6px; }
@@ -124,13 +129,12 @@
 .tprice .pf { font-family: var(--mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); }
 .tprice .pv { font-family: var(--display); font-weight: 800; font-size: 17px; color: var(--human); }
 
-/* ——— track detail ——— */
-.hero-art { height: 132px; border-radius: var(--r-card); position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 14px; border: 1px solid var(--line); }
-.hero-art::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(5,4,9,.72)); }
-.hero-art .ha-play { position: absolute; top: 14px; right: 14px; width: 38px; height: 38px; border-radius: 50%; background: rgba(8,6,13,.45); border: 1px solid rgba(255,255,255,.28); display: grid; place-items: center; color: #fff; font-size: 13px; }
-.hero-art .ha-meta { position: relative; z-index: 1; }
-.hero-art .ha-meta .htt { font-family: var(--display); font-weight: 800; font-size: 22px; letter-spacing: -0.02em; }
-.hero-art .ha-meta .hta { display: inline-block; color: rgba(245,242,250,.82); font-size: 13px; margin-top: 2px; }
+/* ——— track detail head: cover + title ——— */
+.trackhead { display: flex; gap: 16px; align-items: center; }
+.cover-lg { width: 108px; height: 108px; flex: none; border-radius: var(--r-card); overflow: hidden; background: #0c0a12; }
+.th-meta { min-width: 0; }
+.th-meta .htt { font-family: var(--display); font-weight: 800; font-size: 24px; letter-spacing: -0.03em; line-height: 1.04; }
+.th-meta .hta { display: inline-block; font-size: 13px; margin-top: 6px; }
 .artistlink { color: var(--human-2); }
 .artistlink:hover { color: var(--human); }
 .trow2 { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
@@ -209,7 +213,8 @@
 .steps .stp.done, .steps .stp.cur { background: var(--human); }
 .dropzone { border: 1.5px dashed var(--line-2); border-radius: var(--r-card); padding: 32px 18px; text-align: center; transition: border-color .2s, background .2s; }
 .dropzone:hover { border-color: var(--human); }
-.dropzone .dz-ic { font-size: 26px; color: var(--ink-dim); }
+.dropzone .dz-ic { color: var(--ink-dim); }
+.dropzone .dz-ic svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .dropzone .dz-t { font-family: var(--display); font-weight: 700; font-size: 16px; margin-top: 8px; }
 .dropzone .dz-s { color: var(--ink-faint); font-size: 12px; margin-top: 4px; }
 
@@ -236,8 +241,7 @@
 
 /* verify */
 .scanbox { border: 1px solid var(--line); border-radius: var(--r-card); padding: 22px; text-align: center; }
-.scan-target { width: 96px; height: 96px; margin: 4px auto 14px; border-radius: var(--r-card); border: 1px solid var(--line); position: relative; overflow: hidden; }
-.scan-target::after { content: "\266A"; position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-faint); font-size: 26px; }
+.scan-target { width: 104px; height: 104px; margin: 4px auto 14px; border-radius: var(--r-card); overflow: hidden; background: #0c0a12; }
 .report-head { text-align: center; padding: 8px 0 4px; }
 .report-head .rh-score { font-family: var(--display); font-weight: 900; font-size: 46px; color: var(--good); letter-spacing: -0.03em; }
 .report-head .rh-lab { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--good); }
@@ -245,7 +249,8 @@
 /* wallet */
 .txn { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
 .txn:last-child { border-bottom: none; }
-.txn .tx-ic { width: 32px; height: 32px; border-radius: 9px; flex: none; display: grid; place-items: center; font-size: 14px; background: var(--bg-3); border: 1px solid var(--line); color: var(--ink-dim); }
+.txn .tx-ic { width: 32px; height: 32px; border-radius: 9px; flex: none; display: grid; place-items: center; background: var(--bg-3); border: 1px solid var(--line); color: var(--ink-dim); }
+.txn .tx-ic svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .txn .tx-t { font-size: 13px; } .txn .tx-t small { display: block; color: var(--ink-faint); font-size: 11.5px; }
 .txn .tx-v { margin-left: auto; font-family: var(--display); font-weight: 700; font-size: 15px; }
 .txn .tx-v.in { color: var(--good); } .txn .tx-v.out { color: var(--ink-dim); }
@@ -255,6 +260,8 @@
 
 /* launch role cards */
 .rolecard { display: flex; gap: 14px; align-items: center; width: 100%; text-align: left; }
+.rolecard .rc-ic { width: 44px; height: 44px; flex: none; border: 1px solid var(--line-2); border-radius: var(--r-ctl); display: grid; place-items: center; color: var(--human); }
+.rolecard .rc-ic svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.7; }
 .rolecard .rc-mid { flex: 1; }
 .rolecard .rc-t { display: block; font-family: var(--display); font-weight: 700; font-size: 17px; }
 .rolecard .rc-arr { color: var(--ink-faint); font-size: 20px; }
