@@ -8,7 +8,7 @@ const dir = path.dirname(fileURLToPath(import.meta.url));
 const css = fs.readFileSync(path.join(dir, 'assets/styles.css'), 'utf8');
 const js = fs.readFileSync(path.join(dir, 'assets/app.js'), 'utf8');
 const appCss = fs.readFileSync(path.join(dir, 'assets/app-proto.css'), 'utf8');
-const appJs = fs.readFileSync(path.join(dir, 'assets/app-proto.js'), 'utf8');
+const appGenCss = fs.readFileSync(path.join(dir, 'assets/app-gen.css'), 'utf8');
 
 const pages = [
   ['index.html', 'mockup-throughline.html'],
@@ -22,18 +22,18 @@ for (const [src, out] of pages) {
     '<link rel="stylesheet" href="assets/styles.css" />',
     '<style>\n' + css + '\n</style>'
   );
-  // app.html pulls in the extra prototype stylesheet/script too
+  // app.html pulls in the extra prototype stylesheets too (it is pure CSS, no JS)
   html = html.replace(
     '<link rel="stylesheet" href="assets/app-proto.css" />',
     '<style>\n' + appCss + '\n</style>'
   );
   html = html.replace(
-    '<script src="assets/app.js"></script>',
-    '<script>\n' + js + '\n</script>'
+    '<link rel="stylesheet" href="assets/app-gen.css" />',
+    '<style>\n' + appGenCss + '\n</style>'
   );
   html = html.replace(
-    '<script src="assets/app-proto.js"></script>',
-    '<script>\n' + appJs + '\n</script>'
+    '<script src="assets/app.js"></script>',
+    '<script>\n' + js + '\n</script>'
   );
   // repoint cross-page nav links to the sibling self-contained files
   html = html.replace(/href="index\.html"/g, 'href="mockup-throughline.html"');

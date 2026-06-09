@@ -293,6 +293,26 @@
 .empty { text-align: center; color: var(--ink-faint); font-size: 13px; padding: 30px 10px; }
 .note-line { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); line-height: 1.6; }
 
+/* ——— CSS-only app: structural bits for the no-JS prototype ——— */
+.state { position: absolute; width: 0; height: 0; overflow: hidden; }
+.appbar .ab-brandrow { display: flex; align-items: center; gap: 11px; }
+/* per-screen back header (replaces the JS-driven shared app-bar title) */
+.schead { display: flex; align-items: center; gap: 12px; margin: -2px 0 10px; }
+.schead .ab-back { width: 34px; height: 34px; }
+.schead .sh-t { font-family: var(--display); font-weight: 800; font-size: 18px; letter-spacing: -0.02em; text-transform: uppercase; }
+.ab-back.inline { font-size: 16px; line-height: 1; }
+/* labels are the tappable controls now — kill the default text caret/selection */
+label.pbtn, label.tcard, label.tab, label.fchip, label.seg-opt, label.trow-toggle,
+label.dropzone, label.rolecard, label.ab-back, label.seeproof, label.checkrow { cursor: pointer; }
+/* role cards on the launch screen */
+.rolecard { display: flex; gap: 14px; align-items: center; width: 100%; text-align: left; }
+.rolecard .rc-mid { flex: 1; }
+.rolecard .rc-t { display: block; font-family: var(--display); font-weight: 700; font-size: 17px; }
+.rolecard .rc-arr { color: var(--ink-faint); font-size: 20px; }
+/* badges + see-proof row on track detail */
+.trow2 { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.seeproof { margin-left: auto; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--chain); }
+
 @media (max-width: 440px) {
   .stage { padding: 8px 0 0; }
   .phone { width: 100%; height: 100vh; max-height: none; border-radius: 0; border: none; box-shadow: none; }
