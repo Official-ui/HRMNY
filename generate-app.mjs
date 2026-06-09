@@ -39,14 +39,14 @@ function projected(base, scopeMult, momIdx, excl) {
   return price(base, scopeMult, momIdx + 1, excl).buyer;
 }
 
-/* ——— art gradients ——— */
+/* ——— art tiles — muted, near-monochrome (color stays an accent, not a fill) ——— */
 const ART = {
-  violet: 'linear-gradient(135deg,#7c3aed,#c77dff)',
-  green:  'linear-gradient(135deg,#5fd39a,#7c3aed)',
-  fire:   'linear-gradient(135deg,#c77dff,#ff8ab0)',
-  cool:   'linear-gradient(135deg,#4356c7,#9d6bf5)',
-  dusk:   'linear-gradient(135deg,#2a1a4a,#7c3aed)',
-  sand:   'linear-gradient(135deg,#6a6580,#15111d)',
+  violet: '#221a35',
+  green:  '#18271f',
+  fire:   '#2b1c2f',
+  cool:   '#1a2036',
+  dusk:   '#1d1830',
+  sand:   '#222028',
 };
 
 /* ——— catalog ——— */
@@ -63,6 +63,28 @@ const track = (id) => TRACKS.find((t) => t.id === id);
 const cat = (t) => (t.mom >= 3 ? 'fire' : t.mom <= 1 ? 'cold' : 'mid');
 const fromPrice = (t) => price(t.base, 1.0, t.mom, false).buyer;
 
+/* ——— the brand's purchased licenses (the buyer library / "what I own") ——— */
+const LICENSED = [
+  { id: 'midnight', scope: 'paid',  excl: false, date: 'Jun 6, 2026',  ago: '3 days ago' },
+  { id: 'neon',     scope: 'broad', excl: false, date: 'Jun 1, 2026',  ago: '1 week ago' },
+  { id: 'bloom',    scope: 'org',   excl: false, date: 'May 26, 2026', ago: '2 weeks ago' },
+];
+const scopeOf = (id) => SCOPES.find((s) => s.id === id);
+const licPrice = (l) => price(track(l.id).base, scopeOf(l.scope).mult, track(l.id).mom, l.excl);
+const fileName = (t) => t.title.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') + '.wav';
+
+/* ——— artists (public profiles, reachable by tapping an artist name) ——— */
+const ARTIST_META = {
+  'Mara Vance': { slug: 'mara',  art: ART.violet, loc: 'Los Angeles, CA', bio: 'Synthwave & cinematic pop. Every release is human-made and signed — no AI, ever.' },
+  'KOJI':       { slug: 'koji',  art: ART.fire,   loc: 'Berlin, DE',      bio: 'Club-leaning electronic, built from hardware jams and field recordings.' },
+  'Elara':      { slug: 'elara', art: ART.dusk,   loc: 'London, UK',      bio: 'Ambient and slow-tempo songwriting made for film and brand work.' },
+  'The Foley':  { slug: 'foley', art: ART.cool,   loc: 'Austin, TX',      bio: 'Indie-electronic duo — sound-design heavy and sync-ready.' },
+  'Wren':       { slug: 'wren',  art: ART.sand,   loc: 'Portland, OR',    bio: 'Lo-fi and downtempo. New to HRMNY and building momentum.' },
+};
+const slugOf = (name) => ARTIST_META[name].slug;
+const ARTISTS = [...new Set(TRACKS.map((t) => t.artist))];
+const tracksByArtist = (name) => TRACKS.filter((t) => t.artist === name);
+
 /* ——— small html bits ——— */
 const LOGO = (cls = 'logo-mark', extra = '') =>
   `<svg class="${cls}" viewBox="0 0 132 72" aria-hidden="true"${extra}>` +
@@ -71,7 +93,7 @@ const LOGO = (cls = 'logo-mark', extra = '') =>
   `<circle class="node-l" cx="40" cy="36" r="9"/><circle class="node-c" cx="66" cy="36" r="10"/><circle class="node-r" cx="92" cy="36" r="9"/></svg>`;
 const momChip = (idx) => {
   const m = MOM[idx];
-  return `<span class="mom-chip" data-m="${m.key}">${idx >= 3 ? '🔥 ' : ''}${m.label} · ${m.score}</span>`;
+  return `<span class="mom-chip" data-m="${m.key}">${m.label} · ${m.score}</span>`;
 };
 const back = (target) => `<label class="ab-back inline" for="scr-${target}" aria-label="Back">‹</label>`;
 
@@ -79,8 +101,10 @@ const back = (target) => `<label class="ab-back inline" for="scr-${target}" aria
 function stateInputs() {
   let s = '<div class="state">';
   // screen router
-  const screens = ['launch', 'discover', 'studio', 'verify', 'wallet', 'up1', 'up2', 'up3', 'up4', 'published', 'report'];
+  const screens = ['launch', 'discover', 'licenses', 'studio', 'verify', 'wallet', 'up1', 'up2', 'up3', 'up4', 'published', 'report'];
   TRACKS.forEach((t) => { screens.push('det-' + t.id, 'co-' + t.id, 'rc-' + t.id); });
+  LICENSED.forEach((l) => { screens.push('lic-' + l.id); });
+  ARTISTS.forEach((name) => { screens.push('artist-' + slugOf(name)); });
   screens.forEach((id) => {
     s += `<input class="vh" type="radio" name="scr" id="scr-${id}"${id === 'launch' ? ' checked' : ''}>`;
   });
@@ -91,6 +115,8 @@ function stateInputs() {
     SCOPES.forEach((sc) => { s += `<input class="vh" type="radio" name="sc-${t.id}" id="sc-${t.id}-${sc.id}"${sc.id === 'org' ? ' checked' : ''}>`; });
     if (t.excl) s += `<input class="vh" type="checkbox" id="ex-${t.id}">`;
   });
+  // per-license download toggle
+  LICENSED.forEach((l) => { s += `<input class="vh" type="checkbox" id="dl-${l.id}">`; });
   // payout toggle (wallet)
   s += `<input class="vh" type="checkbox" id="pay-sent">`;
   s += '</div>';
@@ -157,7 +183,7 @@ const roleCard = (to, art, t, sub) =>
 
 function screenDiscover() {
   const feed = TRACKS.map((t) =>
-    `<label class="tcard" for="scr-det-${t.id}" data-cat="${cat(t)}">` +
+    `<label class="tcard" for="scr-det-${t.id}" data-cat="${cat(t)}" data-search="${(t.title + ' ' + t.artist + ' ' + t.key).toLowerCase()}">` +
     `<span class="tart" style="background:${t.art}"></span>` +
     `<span class="tmeta"><span class="tt">${t.title}</span><span class="ta">${t.artist}</span>` +
     `<span class="trow"><span class="vbadge"><span class="vdot"></span>Human</span>${momChip(t.mom)}</span></span>` +
@@ -166,11 +192,14 @@ function screenDiscover() {
   return scr('discover', '',
     `<div class="eyebrow">For brands &amp; creators</div><div class="s-title">Discover</div>` +
     `<p class="s-sub">Every track here is humans-only and provably so. License before it heats up.</p>` +
+    `<div class="searchbar"><span class="sb-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>` +
+      `<input type="search" class="search-input" data-search-input placeholder="Search a track, artist, or key…" aria-label="Search tracks">` +
+      `<label class="sb-clear" data-search-clear hidden>✕</label></div>` +
     `<div class="chips">` +
       `<label class="fchip" for="flt-all" data-f="all">All</label>` +
       `<label class="fchip" for="flt-fire" data-f="fire">🔥 Heating up</label>` +
       `<label class="fchip" for="flt-cold" data-f="cold">New &amp; cold</label>` +
-    `</div><div class="feed">${feed}</div>`);
+    `</div><div class="feed" data-feed>${feed}<div class="empty" data-no-results hidden>No tracks match your search.</div></div>`);
 }
 
 function screenTrackDetail(t) {
@@ -188,7 +217,8 @@ function screenTrackDetail(t) {
   return scr('det-' + t.id, '',
     `<div class="schead">${back('discover')}<span class="sh-t">License</span></div>` +
     `<div class="hero-art" style="background:${t.art}"><div class="ha-play">▶</div>` +
-      `<div class="ha-meta"><div class="htt">${t.title}</div><div class="hta">${t.artist}</div></div></div>` +
+      `<div class="ha-meta"><div class="htt">${t.title}</div>` +
+      `<label class="hta artistlink" for="scr-artist-${slugOf(t.artist)}">${t.artist} ›</label></div></div>` +
     `<div class="trow2" style="margin-top:12px">` +
       `<span class="vbadge"><span class="vdot"></span>Verified human</span>${momChip(t.mom)}` +
       `<label class="seeproof" for="scr-report">See proof ›</label></div>` +
@@ -232,8 +262,79 @@ function screenReceipt(t) {
       `<div class="hashrow"><span class="hk">base:tx</span><span>0x9f3c…a71d</span></div>` +
       `<div class="hashrow"><span class="hk">arweave</span><span>kQ7…Lm2</span></div>` +
       `<div class="hashrow"><span class="hk">status</span><span style="color:var(--good)">contract pinned · permanent</span></div></div>` +
-    `<label class="pbtn ghost" for="scr-report" style="margin-top:14px">Verify this license ›</label>` +
-    `<label class="pbtn" for="scr-discover" style="margin-top:10px">Back to Discover</label>`);
+    `<label class="pbtn" for="scr-licenses" style="margin-top:14px">View in your licenses →</label>` +
+    `<label class="pbtn ghost" for="scr-report" style="margin-top:10px">Verify this license ›</label>` +
+    `<label class="pbtn ghost" for="scr-discover" style="margin-top:10px">Back to Discover</label>`);
+}
+
+/* buyer library — the brand's purchased licenses */
+function screenLicenses() {
+  const totalSpent = LICENSED.reduce((a, l) => a + licPrice(l).buyer, 0);
+  const list = LICENSED.map((l) => {
+    const t = track(l.id), sc = scopeOf(l.scope);
+    return `<label class="tcard" for="scr-lic-${l.id}">` +
+      `<span class="tart" style="background:${t.art}"></span>` +
+      `<span class="tmeta"><span class="tt">${t.title}</span><span class="ta">${t.artist}</span>` +
+      `<span class="trow"><span class="vbadge"><span class="vdot"></span>Human</span>` +
+      `<span class="mom-chip" data-m="warm">${sc.name}${l.excl ? ' · excl' : ''}</span></span></span>` +
+      `<span class="tprice"><span class="pf">${l.ago}</span><span class="pv" style="font-size:15px">${money(licPrice(l).buyer)}</span></span></label>`;
+  }).join('');
+  return scr('licenses', '',
+    `<div class="eyebrow">For brands &amp; creators</div><div class="s-title">Your licenses</div>` +
+    `<div class="earn" style="margin-top:14px"><div class="e-lab">Licensed &amp; cleared to use</div>` +
+      `<div class="e-amt">${LICENSED.length}<small> tracks</small></div>` +
+      `<div class="e-sub" style="color:var(--ink-dim)">${money(totalSpent)} spent · all verified human</div></div>` +
+    `<div class="eyebrow" style="margin-top:20px">Library</div>` +
+    `<div class="feed" style="margin-top:10px">${list}</div>` +
+    `<p class="note-line" style="text-align:center;margin-top:16px">Every license here is yours to download, with a tamper-proof receipt you can re-check anytime.</p>`);
+}
+
+function screenLicenseDetail(l) {
+  const t = track(l.id), sc = scopeOf(l.scope), p = licPrice(l);
+  return scr('lic-' + l.id, '',
+    `<div class="schead">${back('licenses')}<span class="sh-t">License</span></div>` +
+    `<div class="hero-art" style="background:${t.art}"><div class="ha-play">▶</div>` +
+      `<div class="ha-meta"><div class="htt">${t.title}</div>` +
+      `<label class="hta artistlink" for="scr-artist-${slugOf(t.artist)}">${t.artist} ›</label></div></div>` +
+    `<div class="trow2" style="margin-top:12px"><span class="vbadge"><span class="vdot"></span>Verified human</span>` +
+      `<span class="mom-chip" data-m="warm">Cleared</span></div>` +
+    `<div class="acard" style="margin-top:14px;padding:6px 18px">` +
+      `<div class="kv"><span class="k">Cleared for</span><span class="v">${sc.name}${l.excl ? ' · exclusive' : ' · non-exclusive'}</span></div>` +
+      `<div class="kv"><span class="k">Term</span><span class="v">worldwide · perpetual</span></div>` +
+      `<div class="kv"><span class="k">Licensed on</span><span class="v">${l.date}</span></div>` +
+      `<div class="kv"><span class="k">Paid</span><span class="v">${money(p.buyer)}</span></div></div>` +
+    `<div class="eyebrow" style="margin-top:18px">Your assets</div>` +
+    `<label class="pbtn dl-${l.id}-btn" for="dl-${l.id}" style="margin-top:10px">⤓ Download assets</label>` +
+    `<div class="dl-done dl-${l.id}-done">✓ Saved to your files — <b>${fileName(t)}</b> + <b>license.pdf</b></div>` +
+    `<label class="pbtn ghost" for="scr-report" style="margin-top:10px">Re-verify provenance ›</label>` +
+    `<div class="anchor-box" style="margin-top:12px"><div class="ab-h">⛓ Receipt · tamper-proof registry</div>` +
+      `<div class="hashrow"><span class="hk">base:tx</span><span>0x9f3c…a71d</span></div>` +
+      `<div class="hashrow"><span class="hk">arweave</span><span>kQ7…Lm2</span></div>` +
+      `<div class="hashrow"><span class="hk">status</span><span style="color:var(--good)">contract pinned · permanent</span></div></div>`);
+}
+
+/* public artist profile */
+function screenArtist(name) {
+  const meta = ARTIST_META[name], mine = tracksByArtist(name);
+  const list = mine.map((t) =>
+    `<label class="tcard" for="scr-det-${t.id}">` +
+    `<span class="tart" style="background:${t.art}"></span>` +
+    `<span class="tmeta"><span class="tt">${t.title}</span><span class="ta">${t.bpm} BPM · ${t.key}</span>` +
+    `<span class="trow"><span class="vbadge"><span class="vdot"></span>Human</span>${momChip(t.mom)}</span></span>` +
+    `<span class="tprice"><span class="pf">from</span><span class="pv">${money(fromPrice(t))}</span></span></label>`
+  ).join('');
+  return scr('artist-' + meta.slug, '',
+    `<div class="schead">${back('discover')}<span class="sh-t">Artist</span></div>` +
+    `<div class="artist-hero"><span class="tart" style="width:84px;height:84px;border-radius:22px;background:${meta.art}"></span>` +
+      `<div class="ah-name">${name}</div>` +
+      `<div class="ah-meta"><span class="vbadge"><span class="vdot"></span>Verified human</span>` +
+      `<span class="ah-loc">${meta.loc}</span></div></div>` +
+    `<p class="s-sub" style="margin-top:14px">${meta.bio}</p>` +
+    `<div class="minigrid" style="margin-top:14px">` +
+      `<div class="mstat"><div class="mn">${mine.length}</div><div class="ml">tracks · humans-only</div></div>` +
+      `<div class="mstat"><div class="mn">100%</div><div class="ml">human-verified</div></div></div>` +
+    `<div class="eyebrow" style="margin-top:20px">Catalog</div>` +
+    `<div class="feed" style="margin-top:10px">${list}</div>`);
 }
 
 function screenStudio() {
@@ -386,6 +487,7 @@ function tabbar() {
   const tab = (to, label, svg) => `<label class="tab" for="scr-${to}" data-tab="${to}">${svg}<span class="tlab">${label}</span></label>`;
   return `<nav class="tabbar">` +
     tab('discover', 'Discover', '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>') +
+    tab('licenses', 'Licenses', '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l5 5v13H6z"/><path d="M14 3v5h5"/><path d="m9 14 2 2 4-4"/></svg>') +
     tab('studio', 'Studio', '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>') +
     tab('verify', 'Verify', '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>') +
     tab('wallet', 'Wallet', '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/><circle cx="16.5" cy="14.5" r="1.2" fill="currentColor" stroke="none"/></svg>') +
@@ -396,6 +498,7 @@ function tabbar() {
 const screensHTML = [
   screenLaunch(), screenDiscover(),
   ...TRACKS.map(screenTrackDetail), ...TRACKS.map(screenCheckout), ...TRACKS.map(screenReceipt),
+  screenLicenses(), ...LICENSED.map(screenLicenseDetail), ...ARTISTS.map(screenArtist),
   screenStudio(), screenUp1(), screenUp2(), screenUp3(), screenUp4(), screenPublished(),
   screenVerify(), screenReport(), screenWallet(),
 ].join('\n');
@@ -447,6 +550,7 @@ ${screensHTML}
   </div>
 </div>
 
+<script src="assets/app-search.js"></script>
 </body>
 </html>
 `;
@@ -458,16 +562,19 @@ let css = `/* GENERATED by generate-app.mjs — do not edit by hand.
    #phone .state via :has(). */\n\n`;
 
 // screen routing
-const allScreens = ['launch', 'discover', 'studio', 'verify', 'wallet', 'up1', 'up2', 'up3', 'up4', 'published', 'report'];
+const allScreens = ['launch', 'discover', 'licenses', 'studio', 'verify', 'wallet', 'up1', 'up2', 'up3', 'up4', 'published', 'report'];
 TRACKS.forEach((t) => allScreens.push('det-' + t.id, 'co-' + t.id, 'rc-' + t.id));
+LICENSED.forEach((l) => allScreens.push('lic-' + l.id));
+ARTISTS.forEach((name) => allScreens.push('artist-' + slugOf(name)));
 css += '/* screen routing */\n';
 allScreens.forEach((id) => {
   css += `#phone:has(#scr-${id}:checked) .screen[data-screen="${id}"]{display:block}\n`;
 });
 
 // tab active families
-const fam = { discover: ['discover'], studio: ['studio', 'up1', 'up2', 'up3', 'up4', 'published'], verify: ['verify', 'report'], wallet: ['wallet'] };
-TRACKS.forEach((t) => { fam.discover.push('det-' + t.id, 'co-' + t.id, 'rc-' + t.id); });
+const fam = { discover: ['discover'], licenses: ['licenses'], studio: ['studio', 'up1', 'up2', 'up3', 'up4', 'published'], verify: ['verify', 'report'], wallet: ['wallet'] };
+TRACKS.forEach((t) => { fam.discover.push('det-' + t.id, 'co-' + t.id, 'rc-' + t.id, 'artist-' + slugOf(t.artist)); });
+LICENSED.forEach((l) => { fam.licenses.push('lic-' + l.id); });
 css += '\n/* tab highlight */\n';
 Object.entries(fam).forEach(([tabName, ids]) => {
   ids.forEach((id) => {
@@ -483,24 +590,25 @@ css += '\n/* discover filter */\n';
 css += `#phone:has(#flt-fire:checked) .feed .tcard:not([data-cat="fire"]){display:none}\n`;
 css += `#phone:has(#flt-cold:checked) .feed .tcard:not([data-cat="cold"]){display:none}\n`;
 ['all', 'fire', 'cold'].forEach((f) => {
-  css += `#phone:has(#flt-${f}:checked) .chips .fchip[data-f="${f}"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}\n`;
+  css += `#phone:has(#flt-${f}:checked) .chips .fchip[data-f="${f}"]{border-color:var(--human);color:var(--human)}\n`;
 });
 
-// scope segmented-control selected state
+// scope segmented-control selected state (accent border + faint tint, accent multiplier)
+// scoped to each track's own screen so other tracks' default Organic doesn't bleed in
 css += '\n/* scope selection highlight */\n';
 TRACKS.forEach((t) => {
   SCOPES.forEach((sc) => {
-    css += `#phone:has(#sc-${t.id}-${sc.id}:checked) .seg-opt[data-scope="${sc.id}"]{}\n`.replace('{}', '{border-color:var(--human);background:rgba(124,58,237,.10)}');
+    const at = `#phone:has(#sc-${t.id}-${sc.id}:checked) .screen[data-screen="det-${t.id}"] .seg-opt[data-scope="${sc.id}"]`;
+    css += `${at}{border-color:var(--human);background:rgba(124,58,237,.06)}\n`;
+    css += `${at} .so-m{color:var(--human)}\n`;
   });
 });
-// note: the above targets all detail screens' seg-opts; since only the active track's
-// screen is visible, the highlight only shows where it matters.
 
-// exclusivity toggle visual
+// exclusivity toggle on-state (knob travel matches the 46px/20px switch)
 css += '\n/* exclusivity toggle on-state */\n';
 TRACKS.filter((t) => t.excl).forEach((t) => {
-  css += `#phone:has(#ex-${t.id}:checked) .screen[data-screen="det-${t.id}"] .trow-toggle .sw{background:rgba(124,58,237,.4)}\n`;
-  css += `#phone:has(#ex-${t.id}:checked) .screen[data-screen="det-${t.id}"] .trow-toggle .sw .swk{transform:translateX(22px);background:var(--human-2)}\n`;
+  css += `#phone:has(#ex-${t.id}:checked) .screen[data-screen="det-${t.id}"] .trow-toggle .sw{background:rgba(124,58,237,.35);border-color:var(--human)}\n`;
+  css += `#phone:has(#ex-${t.id}:checked) .screen[data-screen="det-${t.id}"] .trow-toggle .sw .swk{transform:translateX(20px);background:#fff}\n`;
 });
 
 // price panels: default hidden, reveal the matching combo
@@ -520,6 +628,13 @@ TRACKS.forEach((t) => {
 css += '\n/* wallet payout (!important beats the button\'s inline display) */\n.payout-done{display:none}\n';
 css += `#phone:has(#pay-sent:checked) .payout-done{display:block;margin-top:10px;color:var(--good);font-family:var(--mono);font-size:12px}\n`;
 css += `#phone:has(#pay-sent:checked) .payout-btn{display:none!important}\n`;
+
+// license download toggle (buyer library)
+css += '\n/* license downloads */\n.dl-done{display:none}\n';
+LICENSED.forEach((l) => {
+  css += `#phone:has(#dl-${l.id}:checked) .dl-${l.id}-done{display:block}\n`;
+  css += `#phone:has(#dl-${l.id}:checked) .dl-${l.id}-btn{display:none!important}\n`;
+});
 
 // the brand bar is redundant on the launch screen (it has its own big logo)
 css += '\n/* launch chrome */\n#phone:has(#scr-launch:checked) .appbar{display:none}\n';

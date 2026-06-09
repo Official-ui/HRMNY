@@ -9,6 +9,7 @@ const css = fs.readFileSync(path.join(dir, 'assets/styles.css'), 'utf8');
 const js = fs.readFileSync(path.join(dir, 'assets/app.js'), 'utf8');
 const appCss = fs.readFileSync(path.join(dir, 'assets/app-proto.css'), 'utf8');
 const appGenCss = fs.readFileSync(path.join(dir, 'assets/app-gen.css'), 'utf8');
+const appSearchJs = fs.readFileSync(path.join(dir, 'assets/app-search.js'), 'utf8');
 
 const pages = [
   ['index.html', 'mockup-throughline.html'],
@@ -34,6 +35,10 @@ for (const [src, out] of pages) {
   html = html.replace(
     '<script src="assets/app.js"></script>',
     '<script>\n' + js + '\n</script>'
+  );
+  html = html.replace(
+    '<script src="assets/app-search.js"></script>',
+    '<script>\n' + appSearchJs + '\n</script>'
   );
   // repoint cross-page nav links to the sibling self-contained files
   html = html.replace(/href="index\.html"/g, 'href="mockup-throughline.html"');
