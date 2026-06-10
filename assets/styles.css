@@ -152,7 +152,7 @@ section + section { border-top: 1px solid var(--line); }
 .sticker { display: inline-block; align-self: flex-start; margin: 6px 0 12px; border: 1px dashed var(--line-2); border-radius: 8px; padding: 8px 14px; font-family: var(--mono); font-size: 13px; color: var(--ink-dim); transform: rotate(-3deg); }
 .proof-list { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; }
 .proof-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; }
-.proof-list .tick { color: var(--human); font-family: var(--mono); }
+.proof-list .tick { color: var(--check); font-family: var(--mono); }
 
 /* two views — checkbox + :has() */
 .switch-row { display: flex; align-items: center; gap: 16px; margin: 26px 0; cursor: pointer; width: max-content; }
@@ -169,7 +169,7 @@ section + section { border-top: 1px solid var(--line); }
 
 .receipt { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
 .receipt .rhead { background: var(--bg-3); padding: 16px 22px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--line); }
-.receipt .rhead .ok { width: 22px; height: 22px; border-radius: 50%; background: var(--good); color: #08210f; display: grid; place-items: center; font-size: 13px; font-weight: 700; }
+.receipt .rhead .ok { width: 22px; height: 22px; border-radius: 50%; background: var(--check); color: #08210f; display: grid; place-items: center; font-size: 13px; font-weight: 700; }
 .receipt .rhead .ttl { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--good); }
 .receipt .rbody { padding: 22px; display: grid; gap: 14px; }
 .rrow { display: grid; grid-template-columns: 130px 1fr; gap: 14px; align-items: baseline; }

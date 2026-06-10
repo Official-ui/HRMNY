@@ -310,7 +310,7 @@
 
 /* wallet payout (!important beats the button's inline display) */
 .payout-done{display:none}
-#phone:has(#pay-sent:checked) .payout-done{display:block;margin-top:10px;color:var(--good);font-family:var(--mono);font-size:12px}
+#phone:has(#pay-sent:checked) .payout-done{display:block;margin-top:10px;color:var(--ink-dim);font-family:var(--mono);font-size:12px}
 #phone:has(#pay-sent:checked) .payout-btn{display:none!important}
 
 /* license downloads */

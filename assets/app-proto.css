@@ -10,11 +10,14 @@
   --r-card: 12px;
   --r-ctl: 9px;
   --r-tile: 8px;
-  /* brand discipline: no green/teal. "verified / good" reads in brand indigo,
-     momentum heat in magenta. Black + white + the two brand accents only. */
+  /* brand discipline: "verified / good" reads in brand indigo, momentum heat in
+     magenta. The one exception is checkmarks, which are ALWAYS green. */
   --good: var(--human);
   --bad: var(--chain);
+  --check: #54cf93;
 }
+/* every checkmark is green, everywhere */
+.ck { color: var(--check); }
 
 /* ——— Stage ——— */
 .stage { min-height: 100vh; display: grid; grid-template-rows: 1fr auto; place-items: center; padding: 26px 16px 18px; gap: 14px; }
@@ -184,7 +187,7 @@
 .paychip .pc-ic { width: 32px; height: 21px; border-radius: 4px; background: var(--bg-3); border: 1px solid var(--line-2); flex: none; }
 .paychip .pc-t { font-size: 13px; } .paychip .pc-t small { display: block; color: var(--ink-faint); font-size: 11px; }
 
-.success-ring { width: 64px; height: 64px; border-radius: 50%; margin: 6px auto 12px; display: grid; place-items: center; border: 1.5px solid var(--good); color: var(--good); font-size: 28px; }
+.success-ring { width: 64px; height: 64px; border-radius: 50%; margin: 6px auto 12px; display: grid; place-items: center; border: 1.5px solid var(--check); color: var(--check); font-size: 28px; }
 .anchor-box { border: 1px solid var(--line); border-radius: var(--r-ctl); padding: 13px; }
 .anchor-box .ab-h { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 9px; }
 .hashrow { font-family: var(--mono); font-size: 11px; color: var(--ink-dim); word-break: break-all; padding: 4px 0; display: flex; gap: 8px; }
@@ -221,7 +224,7 @@
 .scan-line { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
 .scan-line:last-child { border-bottom: none; }
 .scan-line .sl-ic { width: 24px; height: 24px; border-radius: 50%; flex: none; display: grid; place-items: center; font-size: 12px; border: 1px solid var(--line-2); color: var(--ink-faint); }
-.scan-line.ok .sl-ic { border-color: var(--good); color: var(--good); }
+.scan-line.ok .sl-ic { border-color: var(--check); color: var(--check); }
 .scan-line .sl-t { font-size: 13.5px; } .scan-line .sl-t small { display: block; color: var(--ink-faint); font-size: 11.5px; }
 .scan-line .sl-v { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--ink-dim); text-align: right; }
 
@@ -231,7 +234,7 @@
 .field input:focus { outline: none; border-color: var(--human); }
 .checkrow { display: flex; align-items: center; gap: 11px; padding: 10px 0; }
 .checkrow .cbx { width: 20px; height: 20px; border-radius: 6px; border: 1px solid var(--line-2); flex: none; display: grid; place-items: center; color: transparent; font-size: 12px; transition: all .18s; }
-.checkrow.on .cbx { background: var(--human); border-color: var(--human); color: #fff; }
+.checkrow.on .cbx { background: rgba(84,207,147,.16); border-color: var(--check); color: var(--check); }
 .checkrow .cl { font-size: 13.5px; } .checkrow .cl small { display: block; color: var(--ink-faint); font-size: 11.5px; }
 
 .attest { border: 1px solid var(--line-2); border-radius: var(--r-card); padding: 16px; }
@@ -273,7 +276,7 @@ label.dropzone, label.rolecard, label.ab-back, label.seeproof, label.checkrow,
 label.artistlink, label.hta, label.sb-clear { cursor: pointer; }
 
 /* downloaded-confirmation line (library) */
-.dl-done { display: none; margin-top: 10px; font-family: var(--mono); font-size: 12px; color: var(--good); line-height: 1.5; }
+.dl-done { display: none; margin-top: 10px; font-family: var(--mono); font-size: 12px; color: var(--ink-dim); line-height: 1.5; }
 .dl-done b { color: var(--ink); font-weight: 500; }
 
 @media (max-width: 440px) {
