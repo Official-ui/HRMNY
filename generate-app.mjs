@@ -148,8 +148,9 @@ function stateInputs() {
   });
   // per-license download toggle
   LICENSED.forEach((l) => { s += `<input class="vh" type="checkbox" id="dl-${l.id}">`; });
-  // payout toggle (wallet)
+  // payout toggle (wallet) + share-profile toggle (studio)
   s += `<input class="vh" type="checkbox" id="pay-sent">`;
+  s += `<input class="vh" type="checkbox" id="share-copied">`;
   s += '</div>';
   return s;
 }
@@ -222,7 +223,7 @@ function screenDiscover() {
   ).join('');
   return scr('discover', '',
     `<div class="eyebrow">For brands &amp; creators</div><div class="s-title">Discover</div>` +
-    `<p class="s-sub">Every track here is humans-only and provably so. License before it heats up.</p>` +
+    `<p class="s-sub">An invite-only roster of real artists. Every track is sync-ready and clears in one click — no agency, no waiting.</p>` +
     `<div class="searchbar"><span class="sb-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>` +
       `<input type="search" class="search-input" data-search-input placeholder="Search a track, artist, or key…" aria-label="Search tracks">` +
       `<label class="sb-clear" data-search-clear hidden>✕</label></div>` +
@@ -380,36 +381,45 @@ function screenStudio() {
     `<span class="tprice"><span class="pf">status</span><span class="pv" style="font-size:13px;color:var(--good)">LIVE</span></span></label>`
   ).join('');
   return scr('studio', '',
-    `<div class="eyebrow">Artist studio</div><div class="s-title">Hey, Mara</div>` +
+    `<div class="eyebrow">Your sync profile</div><div class="s-title">Hey, Mara</div>` +
+    `<div class="trow2" style="margin-top:10px">` +
+      `<span class="vbadge" style="color:var(--human)"><span class="vdot" style="background:var(--human)"></span>Invited · HRMNY roster</span>` +
+      `<span class="mom-chip" style="color:var(--ink-dim)">hrmny.co/mara</span></div>` +
     `<div class="earn" style="margin-top:14px"><div class="e-lab">Lifetime earnings · you keep 100%</div>` +
       `<div class="e-amt">${money(totalEarned)}</div><div class="e-sub">+$612 in the last 30 days</div>` +
-      `<div class="minigrid"><div class="mstat"><div class="mn">${mine.length}</div><div class="ml">tracks live</div></div>` +
+      `<div class="minigrid"><div class="mstat"><div class="mn">${mine.length}</div><div class="ml">tracks · sync-ready</div></div>` +
       `<div class="mstat"><div class="mn">${totalLic}</div><div class="ml">licenses sold</div></div></div></div>` +
-    `<label class="pbtn" for="scr-up1" style="margin-top:14px">Upload a track</label>` +
-    `<div class="eyebrow" style="margin-top:22px">Your catalog</div><div class="feed" style="margin-top:10px">${list}</div>`);
+    `<label class="pbtn share-btn" for="share-copied" style="margin-top:14px">Share your profile</label>` +
+    `<div class="share-done"><span class="ck">✓</span> Link copied — <b>hrmny.co/mara</b> · send it to any sync or brand contact and they can license on the spot</div>` +
+    `<label class="pbtn ghost" for="scr-up1" style="margin-top:10px">Add a track</label>` +
+    `<div class="eyebrow" style="margin-top:22px">Your sync-ready catalog</div><div class="feed" style="margin-top:10px">${list}</div>` +
+    `<p class="note-line" style="text-align:center;margin-top:14px">Your profile is yours — beautiful, shareable, and earning whether or not a brand ever finds you here.</p>`);
 }
 
 /* upload steps */
 function screenUp1() {
   return scr('up1', '',
-    upHead(0, 'discover'.replace('discover', 'studio')) +
-    `<div class="eyebrow">Step 1 · File</div><div class="s-title" style="font-size:23px">Add your track</div>` +
+    upHead(0, 'studio') +
+    `<div class="eyebrow">Step 1 · Drop the file</div><div class="s-title" style="font-size:23px">Just give us the song</div>` +
     `<label class="dropzone" for="scr-up2" style="margin-top:16px"><div class="dz-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></div>` +
-      `<div class="dz-t">Drop an audio file</div><div class="dz-s">WAV / FLAC / MP3 · up to 100 MB</div></label>` +
-    `<p class="note-line" style="margin-top:14px">Humans only. Every upload is fingerprinted and scanned — AI-generated tracks are rejected.</p>`);
+      `<div class="dz-t">Drop your master</div><div class="dz-s">WAV / FLAC / MP3 · up to 100 MB</div></label>` +
+    `<p class="note-line" style="margin-top:14px">One file is all you bring. HRMNY turns it into everything a brand needs — you don’t have to know how sync works.</p>`);
 }
 function screenUp2() {
   const line = (t, v) => `<div class="scan-line show ok"><span class="sl-ic">✓</span><span class="sl-t">${t}</span><span class="sl-v">${v}</span></div>`;
   return scr('up2', '',
     upHead(1, 'up1') +
-    `<div class="eyebrow">Step 2 · Verify</div><div class="s-title" style="font-size:23px">Checked — it’s real</div>` +
-    `<p class="s-sub">midnight_drive_master.wav</p>` +
+    `<div class="eyebrow">Step 2 · Made sync-ready</div><div class="s-title" style="font-size:23px">We packaged it for you</div>` +
+    `<p class="s-sub">midnight_drive_master.wav → a full sync package, automatically.</p>` +
     `<div class="acard" style="margin-top:14px;padding:6px 18px">` +
-      line('AudD acoustic fingerprint', 'no match — original') +
-      line('C2PA Content Credentials', 'written to file') +
-      line('AI-generation scan', '0% synthetic') +
-      line('Format &amp; loudness', 'WAV · −14 LUFS') +
-    `</div><label class="pbtn" for="scr-up3" style="margin-top:16px">Looks human — continue →</label>`);
+      line('Metadata', 'BPM, key, mood, genre, instruments') +
+      line('Instrumental + clean edits', 'vocals-out, radio-safe') +
+      line('Cuts for editors', ':15 · :30 · :60') +
+      line('Stems', 'drums · bass · keys · vox') +
+      line('Verified human &amp; original', 'fingerprint + AI scan: 0% synthetic') +
+    `</div>` +
+    `<p class="note-line" style="margin-top:12px">The stuff most artists never think to prep — done in seconds.</p>` +
+    `<label class="pbtn" for="scr-up3" style="margin-top:14px">Looks great — continue →</label>`);
 }
 function screenUp3() {
   return scr('up3', '',
@@ -427,8 +437,8 @@ function screenUp4() {
     `<div class="checkrow on"><span class="cbx">✓</span><span class="cl">${name}<small>licenses at ${mult} of base</small></span></div>`;
   return scr('up4', '',
     upHead(3, 'up3') +
-    `<div class="eyebrow">Step 4 · Price</div><div class="s-title" style="font-size:23px">Set your terms</div>` +
-    `<p class="s-sub">You set the base. HRMNY only ever raises the <i>suggested</i> price as momentum builds — never lowers it, never takes a cut from you.</p>` +
+    `<div class="eyebrow">Step 4 · Your terms</div><div class="s-title" style="font-size:23px">Set your price</div>` +
+    `<p class="s-sub">You set the base; broader use and exclusivity cost more. You keep <b>100%</b> — HRMNY never takes a cut from you.</p>` +
     `<div class="acard" style="margin-top:14px"><div class="field" style="margin:0"><label>Your base price (Organic)</label>` +
       `<input type="text" inputmode="numeric" value="120" aria-label="Base price"></div>` +
       `<hr class="divline"><div class="eyebrow" style="margin-bottom:8px">Offer these scopes</div>` +
@@ -436,8 +446,8 @@ function screenUp4() {
     `</div>` +
     `<div class="quote" style="margin-top:12px"><div class="qpanel" style="display:block">` +
       `<div class="qrow"><span class="qk">Buyer-facing “from” price</span><span class="qv" style="color:var(--human)">${money(b0)}</span></div>` +
-      `<div class="qproj">New tracks start <b>Cold</b>. As creators pick it up, your suggested price climbs — a Paid Social license would suggest <b>${money(warmPaid)}</b> to you at Warm.</div></div></div>` +
-    `<label class="pbtn" for="scr-published" style="margin-top:16px">Publish to catalog →</label>`);
+      `<div class="qproj">Once it’s live, a brand can license it in one click — and it lives on your shareable profile, ready to send to anyone.</div></div></div>` +
+    `<label class="pbtn" for="scr-published" style="margin-top:16px">Publish to my profile →</label>`);
 }
 const upHead = (step, backTo) =>
   `<div class="schead">${back(backTo)}<span class="sh-t">New track</span></div>` +
@@ -448,14 +458,13 @@ function screenPublished() {
   return scr('published', '',
     `<div class="schead">${back('studio')}<span class="sh-t">Confirmed</span></div>` +
     `<div style="text-align:center;padding:6px 0 2px"><div class="success-ring">✓</div>` +
-      `<div class="s-title" style="text-align:center">You’re live</div>` +
-      `<p class="s-sub" style="text-align:center;max-width:30ch;margin:8px auto 0">“Midnight Drive” is verified, attested, and listed at ${money(b0)} from.</p></div>` +
+      `<div class="s-title" style="text-align:center">It’s on your profile</div>` +
+      `<p class="s-sub" style="text-align:center;max-width:32ch;margin:8px auto 0">“Midnight Drive” is sync-ready and licensable in one click, from ${money(b0)}.</p></div>` +
     `<div class="acard" style="margin-top:14px;padding:6px 18px">` +
-      `<div class="kv"><span class="k">Verification</span><span class="v" style="color:var(--good)">human · 100%</span></div>` +
-      `<div class="kv"><span class="k">Attestation</span><span class="v" style="color:var(--good)">signed</span></div>` +
-      `<div class="kv"><span class="k">Registry</span><span class="v">base:tx 0x9f3c…a71d</span></div></div>` +
-    `<label class="pbtn" for="scr-discover" style="margin-top:16px">View in catalog</label>` +
-    `<label class="pbtn ghost" for="scr-studio" style="margin-top:10px">Back to Studio</label>`);
+      `<div class="kv"><span class="k">Sync package</span><span class="v" style="color:var(--check)">built · 4 cuts, stems, metadata</span></div>` +
+      `<div class="kv"><span class="k">Rights</span><span class="v" style="color:var(--check)">cleared · human, single-owner</span></div>` +
+      `<div class="kv"><span class="k">License</span><span class="v">one-click · you keep 100%</span></div></div>` +
+    `<label class="pbtn" for="scr-studio" style="margin-top:16px">Done — view my profile</label>`);
 }
 
 function screenVerify() {
@@ -540,7 +549,7 @@ const html = `<!DOCTYPE html>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>HRMNY · App Demo</title>
-<meta name="description" content="A clickable, no-JS-required prototype of the HRMNY app — discover verified-human tracks, license with live value pricing, upload &amp; verify as an artist, and get paid." />
+<meta name="description" content="A clickable, no-JS-required prototype of the HRMNY app — a curated, invite-only roster, tracks made sync-ready automatically, and one-click licensing for brands. The artist keeps 100%." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -554,7 +563,7 @@ const html = `<!DOCTYPE html>
   <div class="stage-head">
     <a class="brand" href="index.html" style="text-decoration:none">${LOGO()}<b>HRMNY</b></a>
     <h1>The app, clickable</h1>
-    <p>The three pillars as a working product — discover &amp; license verified-human music with live value pricing, upload &amp; prove a track as an artist, and watch the payout land. Tap anything. Works without scripts.</p>
+    <p>The thesis as a working product — a curated, invite-only roster; an artist drops one file and HRMNY makes it sync-ready; a brand licenses in one click. Tap anything. Works without scripts.</p>
   </div>
 
   <div class="phone" id="phone">
@@ -659,6 +668,12 @@ TRACKS.forEach((t) => {
 css += '\n/* wallet payout (!important beats the button\'s inline display) */\n.payout-done{display:none}\n';
 css += `#phone:has(#pay-sent:checked) .payout-done{display:block;margin-top:10px;color:var(--ink-dim);font-family:var(--mono);font-size:12px}\n`;
 css += `#phone:has(#pay-sent:checked) .payout-btn{display:none!important}\n`;
+
+// share-profile toggle (studio)
+css += '\n/* share profile */\n.share-done{display:none}\n';
+css += `#phone:has(#share-copied:checked) .share-done{display:block;margin-top:10px;font-family:var(--sans);font-size:12.5px;color:var(--ink-dim);line-height:1.5}\n`;
+css += `#phone:has(#share-copied:checked) .share-done b{color:var(--ink);font-weight:600}\n`;
+css += `#phone:has(#share-copied:checked) .share-btn{display:none!important}\n`;
 
 // license download toggle (buyer library)
 css += '\n/* license downloads */\n.dl-done{display:none}\n';

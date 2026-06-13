@@ -313,6 +313,12 @@
 #phone:has(#pay-sent:checked) .payout-done{display:block;margin-top:10px;color:var(--ink-dim);font-family:var(--mono);font-size:12px}
 #phone:has(#pay-sent:checked) .payout-btn{display:none!important}
 
+/* share profile */
+.share-done{display:none}
+#phone:has(#share-copied:checked) .share-done{display:block;margin-top:10px;font-family:var(--sans);font-size:12.5px;color:var(--ink-dim);line-height:1.5}
+#phone:has(#share-copied:checked) .share-done b{color:var(--ink);font-weight:600}
+#phone:has(#share-copied:checked) .share-btn{display:none!important}
+
 /* license downloads */
 .dl-done{display:none}
 #phone:has(#dl-midnight:checked) .dl-midnight-done{display:block}
