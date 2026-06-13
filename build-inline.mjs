@@ -10,11 +10,13 @@ const js = fs.readFileSync(path.join(dir, 'assets/app.js'), 'utf8');
 const appCss = fs.readFileSync(path.join(dir, 'assets/app-proto.css'), 'utf8');
 const appGenCss = fs.readFileSync(path.join(dir, 'assets/app-gen.css'), 'utf8');
 const appSearchJs = fs.readFileSync(path.join(dir, 'assets/app-search.js'), 'utf8');
+const portfolioCss = fs.readFileSync(path.join(dir, 'assets/portfolio.css'), 'utf8');
 
 const pages = [
   ['index.html', 'mockup-throughline.html'],
   ['plan.html', 'mockup-plan.html'],
   ['app.html', 'mockup-app.html'],
+  ['portfolio.html', 'mockup-portfolio.html'],
 ];
 
 for (const [src, out] of pages) {
@@ -31,6 +33,10 @@ for (const [src, out] of pages) {
   html = html.replace(
     '<link rel="stylesheet" href="assets/app-gen.css" />',
     '<style>\n' + appGenCss + '\n</style>'
+  );
+  html = html.replace(
+    '<link rel="stylesheet" href="assets/portfolio.css" />',
+    '<style>\n' + portfolioCss + '\n</style>'
   );
   html = html.replace(
     '<script src="assets/app.js"></script>',

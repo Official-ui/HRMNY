@@ -1,0 +1,93 @@
+/* HRMNY — the artist's PUBLIC portfolio page (e.g. hrmny.co/mara).
+   This is what a brand or sync supervisor sees when an artist shares their link:
+   a beautiful, sync-ready catalog where every track clears in one click. Light /
+   Stripe-clean, responsive, works without JavaScript (CSS-only license expanders).
+   Reuses the design tokens from styles.css (now light). */
+
+.pf-page { position: relative; z-index: 1; }
+
+/* slim top bar */
+.pf-bar { display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 28px; border-bottom: 1px solid var(--line); position: sticky; top: 0;
+  background: rgba(255,255,255,.85); backdrop-filter: blur(12px); z-index: 20; }
+.pf-bar .brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 18px; letter-spacing: .02em; text-transform: uppercase; color: var(--ink); }
+.pf-bar .brand .logo-mark { width: 30px; height: 19px; }
+.pf-bar .pf-trust { display: inline-flex; align-items: center; gap: 7px; font-family: var(--sans); font-weight: 600; font-size: 12px; color: var(--ink-dim); border: 1px solid var(--line-2); border-radius: 999px; padding: 6px 12px; }
+.pf-bar .pf-trust .vdot { width: 7px; height: 7px; border-radius: 50%; background: var(--check); }
+
+.pf-wrap { max-width: 940px; margin: 0 auto; padding: 0 28px; }
+
+/* hero / artist header */
+.pf-hero { display: grid; grid-template-columns: 132px 1fr; gap: 28px; align-items: center; padding: 52px 0 36px; }
+.pf-avatar { width: 132px; height: 132px; border-radius: 24px; overflow: hidden; background: var(--bg-2); box-shadow: var(--sh-md), inset 0 0 0 1px rgba(10,37,64,.05); }
+.pf-avatar .cover { width: 100%; height: 100%; display: block; }
+.pf-id .pf-name { font-family: var(--display); font-weight: 800; font-size: clamp(34px, 6vw, 52px); letter-spacing: -0.035em; line-height: 1; color: var(--ink); }
+.pf-badges { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 14px; }
+.pf-badge { display: inline-flex; align-items: center; gap: 7px; font-family: var(--sans); font-weight: 600; font-size: 13px; color: var(--ink-dim); }
+.pf-badge .vdot { width: 8px; height: 8px; border-radius: 50%; }
+.pf-badge.verified { color: var(--check); } .pf-badge.verified .vdot { background: var(--check); }
+.pf-badge.roster { color: var(--human); } .pf-badge.roster .vdot { background: var(--human); }
+.pf-badge.loc { color: var(--ink-faint); }
+.pf-bio { color: var(--ink-dim); font-size: 16px; line-height: 1.55; margin: 18px 0 0; max-width: 60ch; }
+
+/* "every track includes" trust strip */
+.pf-includes { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 0 6px; margin: 6px 0 4px; }
+.pf-chip { display: inline-flex; align-items: center; gap: 7px; font-family: var(--sans); font-weight: 600; font-size: 12.5px; color: var(--ink-dim);
+  background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; box-shadow: var(--sh-sm); }
+.pf-chip svg { width: 14px; height: 14px; stroke: var(--check); fill: none; stroke-width: 2.4; }
+
+.pf-secttl { font-family: var(--sans); font-weight: 600; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--human); margin: 40px 0 16px; }
+
+/* catalog grid */
+.pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pf-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 16px; box-shadow: var(--sh); transition: box-shadow .2s, transform .12s; }
+.pf-card:hover { box-shadow: var(--sh-md); transform: translateY(-2px); }
+.pf-top { display: grid; grid-template-columns: 84px 1fr; gap: 15px; align-items: center; }
+.pf-cover { width: 84px; height: 84px; border-radius: 14px; overflow: hidden; background: var(--bg-2); box-shadow: inset 0 0 0 1px rgba(10,37,64,.05); }
+.pf-cover .cover { width: 100%; height: 100%; display: block; }
+.pf-tt { font-family: var(--display); font-weight: 800; font-size: 19px; letter-spacing: -0.02em; color: var(--ink); }
+.pf-sub { color: var(--ink-dim); font-size: 13px; margin-top: 2px; }
+.pf-mtags { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 9px; }
+.pf-tag { font-family: var(--sans); font-weight: 600; font-size: 11.5px; color: var(--ink-dim); background: var(--bg-2); border-radius: 6px; padding: 3px 8px; }
+.pf-incl { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 0; }
+.pf-incl span { font-family: var(--sans); font-weight: 600; font-size: 11px; letter-spacing: .02em; color: var(--ink-faint); }
+.pf-incl span::before { content: "✓ "; color: var(--check); }
+
+.pf-row { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; gap: 12px; }
+.pf-from { font-family: var(--sans); }
+.pf-from .l { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-faint); display: block; }
+.pf-from .v { font-family: var(--display); font-weight: 800; font-size: 22px; color: var(--ink); }
+.pf-licbtn { font-family: var(--sans); font-weight: 600; font-size: 14px; color: #fff; background: var(--human); border: 1px solid transparent; border-radius: 10px; padding: 11px 20px; cursor: pointer; box-shadow: var(--sh-btn); transition: filter .15s; display: inline-flex; align-items: center; gap: 7px; }
+.pf-licbtn:hover { filter: brightness(1.07); }
+.pf-licbtn .chev { transition: transform .2s; }
+
+/* CSS-only license expander */
+.pf-licpanel { display: none; margin-top: 14px; border-top: 1px solid var(--line); padding-top: 14px; }
+.pf-card:has(.pf-lic-input:checked) .pf-licpanel { display: block; }
+.pf-card:has(.pf-lic-input:checked) .pf-licbtn .chev { transform: rotate(180deg); }
+.pf-lictitle { font-family: var(--sans); font-weight: 600; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 10px; }
+.pf-licrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 13px; border: 1px solid var(--line-2); border-radius: 11px; margin-bottom: 8px; transition: border-color .15s; }
+.pf-licrow:hover { border-color: var(--human); }
+.pf-licrow .sc { font-size: 13.5px; font-weight: 500; color: var(--ink); }
+.pf-licrow .sc small { display: block; color: var(--ink-faint); font-size: 11.5px; font-weight: 400; }
+.pf-licrow .pr { display: flex; align-items: center; gap: 12px; }
+.pf-licrow .pr b { font-family: var(--display); font-weight: 700; font-size: 16px; color: var(--ink); }
+.pf-licrow .go { font-family: var(--sans); font-weight: 600; font-size: 12.5px; color: var(--human); border: 1px solid var(--human); border-radius: 8px; padding: 7px 12px; cursor: pointer; white-space: nowrap; }
+.pf-licrow .go:hover { background: var(--human); color: #fff; }
+.pf-licnote { font-family: var(--sans); font-size: 12px; color: var(--ink-faint); margin-top: 6px; line-height: 1.5; }
+
+/* footer */
+.pf-foot { text-align: center; padding: 56px 0 80px; margin-top: 48px; border-top: 1px solid var(--line); }
+.pf-foot .logo-mark { width: 84px; height: 54px; color: var(--ink); margin: 0 auto 12px; display: block; }
+.pf-foot .pf-fbig { font-family: var(--display); font-weight: 800; font-size: 17px; letter-spacing: -0.01em; color: var(--ink); }
+.pf-foot .pf-fsub { color: var(--ink-dim); font-size: 14px; margin-top: 6px; }
+.pf-foot .pf-fcta { display: inline-block; margin-top: 18px; font-family: var(--sans); font-weight: 600; font-size: 13px; color: var(--human); text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 10px 18px; box-shadow: var(--sh-sm); }
+.pf-foot .pf-fcta:hover { border-color: var(--human); }
+
+@media (max-width: 760px) {
+  .pf-hero { grid-template-columns: 1fr; gap: 18px; padding: 34px 0 28px; text-align: left; }
+  .pf-avatar { width: 100px; height: 100px; }
+  .pf-grid { grid-template-columns: 1fr; }
+  .pf-wrap { padding: 0 18px; }
+  .pf-bar { padding: 14px 18px; }
+}

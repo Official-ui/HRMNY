@@ -688,3 +688,105 @@ css += '\n/* launch chrome */\n#phone:has(#scr-launch:checked) .appbar{display:n
 fs.writeFileSync(path.join(dir, 'app.html'), html);
 fs.writeFileSync(path.join(dir, 'assets/app-gen.css'), css);
 console.log('wrote app.html (' + Math.round(html.length / 1024) + ' KB) + assets/app-gen.css (' + css.split('\n').length + ' rules)');
+
+/* ——————————————————— the artist's PUBLIC portfolio page ———————————————————
+   What a brand sees at hrmny.co/<artist> when the artist shares their link.
+   A standalone, responsive, light/Stripe page — every track sync-ready and
+   licensable in one click. CSS-only license expanders. */
+const MOODS = {
+  midnight: ['Synthwave', 'Driving', 'Nocturnal'],
+  cranes:   ['Tender', 'Acoustic', 'Hopeful'],
+  cellar:   ['Cinematic', 'Brooding', 'Intimate'],
+};
+function portfolioCard(t) {
+  const moods = (MOODS[t.id] || []).map((m) => `<span class="pf-tag">${m}</span>`).join('');
+  const from = price(t.base, 1.0, t.mom, false).buyer;
+  const licRow = (sc) => {
+    const p = price(t.base, sc.mult, t.mom, false).buyer;
+    return `<div class="pf-licrow"><span class="sc">${sc.name}<small>${sc.sub}</small></span>` +
+      `<span class="pr"><b>${money(p)}</b><span class="go">License</span></span></div>`;
+  };
+  return `<div class="pf-card">` +
+    `<input class="vh pf-lic-input" type="checkbox" id="pf-lic-${t.id}">` +
+    `<div class="pf-top">` +
+      `<span class="pf-cover">${coverSVG(t)}</span>` +
+      `<div><div class="pf-tt">${t.title}</div>` +
+      `<div class="pf-sub">${t.bpm} BPM · ${t.key}</div>` +
+      `<div class="pf-mtags">${moods}${momChip(t.mom)}</div></div>` +
+    `</div>` +
+    `<div class="pf-incl"><span>Instrumental</span><span>Stems</span><span>:15/:30/:60 cuts</span><span>Cleared rights</span></div>` +
+    `<div class="pf-row">` +
+      `<span class="pf-from"><span class="l">License from</span><span class="v">${money(from)}</span></span>` +
+      `<label class="pf-licbtn" for="pf-lic-${t.id}">License <span class="chev">▾</span></label>` +
+    `</div>` +
+    `<div class="pf-licpanel">` +
+      `<div class="pf-lictitle">Choose a license — worldwide, perpetual, cleared</div>` +
+      SCOPES.map(licRow).join('') +
+      `<div class="pf-licnote">Each license includes the instrumental, stems and cuts. Cleared at the source — you're buying direct from ${t.artist}, who keeps 100%.</div>` +
+    `</div>` +
+  `</div>`;
+}
+function buildPortfolio(name) {
+  const meta = ARTIST_META[name], mine = tracksByArtist(name);
+  const cards = mine.map(portfolioCard).join('\n');
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${name} · HRMNY</title>
+<meta name="description" content="${name} on HRMNY — a sync-ready catalog of verified-human music, cleared and licensable in one click." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+<link rel="stylesheet" href="assets/portfolio.css" />
+</head>
+<body>
+<div class="pf-page">
+  <div class="pf-bar">
+    <a class="brand" href="index.html" style="text-decoration:none">${LOGO()}<b>HRMNY</b></a>
+    <span class="pf-trust"><span class="vdot"></span>Verified human roster</span>
+  </div>
+
+  <div class="pf-wrap">
+    <div class="pf-hero">
+      <span class="pf-avatar">${disc(meta.slug, meta.acc)}</span>
+      <div class="pf-id">
+        <div class="pf-name">${name}</div>
+        <div class="pf-badges">
+          <span class="pf-badge verified"><span class="vdot"></span>Verified human</span>
+          <span class="pf-badge roster"><span class="vdot"></span>Invite-only roster</span>
+          <span class="pf-badge loc">${meta.loc}</span>
+        </div>
+        <p class="pf-bio">${meta.bio} Every track below is <b style="color:var(--ink)">sync-ready and clears in one click</b> — instrumental, stems and cuts included, rights cleared at the source.</p>
+      </div>
+    </div>
+
+    <div class="pf-includes">
+      ${[['Sync-ready by default'],['Cleared rights, single owner'],['Humans-only, no AI'],['License in one click']].map(([c]) =>
+        `<span class="pf-chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>${c}</span>`).join('\n      ')}
+    </div>
+
+    <div class="pf-secttl">The catalog · ${mine.length} tracks</div>
+    <div class="pf-grid">
+${cards}
+    </div>
+  </div>
+
+  <div class="pf-foot">
+    <div class="pf-wrap">
+      ${LOGO('logo-mark')}
+      <div class="pf-fbig">Powered by HRMNY</div>
+      <div class="pf-fsub">Verified human music, sync-ready, licensed in one click.</div>
+      <a class="pf-fcta" href="index.html">Are you an artist? Request an invite →</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+`;
+}
+const portfolioHtml = buildPortfolio('Mara Vance');
+fs.writeFileSync(path.join(dir, 'portfolio.html'), portfolioHtml);
+console.log('wrote portfolio.html (' + Math.round(portfolioHtml.length / 1024) + ' KB)');
